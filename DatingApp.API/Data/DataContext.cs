@@ -13,5 +13,7 @@ namespace DatingApp.API.Data
         // tell data context class about entities to put in database:
         // pass in the model class to DbSet and specify the name of the table as the property:
         public DbSet<Value> Values { get; set; }
+
+        public DbSet<User> Users { get; set; }
     }
 }

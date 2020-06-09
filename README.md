@@ -1,5 +1,7 @@
 # C# Dotnet Core 3.0 App
 
+### Note: The code is heavily commented for reference purposes.
+
 - MVC Architecture
 - Full CRUD operations
 - Angular 8 Frontend
