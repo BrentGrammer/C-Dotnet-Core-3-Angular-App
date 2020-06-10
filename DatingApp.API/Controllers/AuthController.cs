@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using DatingApp.API.Data;
+using DatingApp.API.Dtos;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,23 +17,25 @@ namespace DatingApp.API.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(string username, string password)
+        // Note: because [ApiController] is being used on the class, the parameters (userForRegisterDto) will be automatically infered to be from a post body (otherewise you would need to specify [FromBody])
+        // Remember to add the route name in the parens for nested routes - api/auth/register
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
             // validate request
 
             // make names lowercase to prevent duplicates with different casing
-            username = username.ToLower();
+            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
-            if (await _repo.UserExists(username))
+            if (await _repo.UserExists(userForRegisterDto.Username))
                 return BadRequest("name already exists.");
 
             var userToCreate = new User
             {
-                Username = username
+                Username = userForRegisterDto.Username
             };
 
-            var createdUser = await _repo.Register(userToCreate, password);
+            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
             return StatusCode(201);
         }
