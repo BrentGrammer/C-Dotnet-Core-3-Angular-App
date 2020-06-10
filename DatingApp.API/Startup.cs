@@ -26,6 +26,7 @@ namespace DatingApp.API
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // NOTE: The order does not matter in here - (does in Configure method) - only order to ake it easier to read
+        //  first few tutorial videos by Mike Taulty on youtube. He is from Microsoft and excellently explains how it works and why it would be used in an application. 
         public void ConfigureServices(IServiceCollection services)
         {
             // add DataContext service and pass in the database engine being used and a connection string
@@ -34,6 +35,16 @@ namespace DatingApp.API
             services.AddControllers();
             // add CORS as a service to prevent corss origin errors in browser on front end
             services.AddCors();
+
+            // adding auth repository to be available and injecfted into app
+            // NOTE: AddScoped is used for the vast majority of services - AddTRansient and AddSingleton are only used if specifically needed
+            // add scope uses same instance of service for all associated calls within a web request, but one per http web request.
+            // rare to use the AddSingleton scope which will keep a service alive for the duration of the app - the only  things we typically use this for are for logging and caching.
+            //transient objects are always different; a new instance is provided to every controller and every service.
+            // see https://stackoverflow.com/questions/38138100/addtransient-addscoped-and-addsingleton-services-differences
+
+            //specify intrace and concrete implementation
+            services.AddScoped<IAuthRepository, AuthRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

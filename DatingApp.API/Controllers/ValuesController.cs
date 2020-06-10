@@ -10,7 +10,7 @@ namespace DatingApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : ControllerBase // ControllerBase is w/out Views and Controller is with Views (in this case we use Angular for View support)
     {
         // Inject the Data Context class into the controller to get data from the  dn:
         private readonly DataContext _context;
