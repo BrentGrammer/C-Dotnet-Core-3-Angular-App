@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API
 {
@@ -45,6 +48,22 @@ namespace DatingApp.API
 
             //specify intrace and concrete implementation
             services.AddScoped<IAuthRepository, AuthRepository>();
+
+            // Configure auth middleware - used for Authorizing calls in routes to tell app how to authenticate
+            // after done configuring you need to add and register the middleware in the Configure block.
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) // override the default schema with jet auth
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        // validate the signing key (from app settings used as the salt) and tell it where th key is
+                        ValidateIssuerSigningKey = true,
+                        // Requires bytes as the argument for the key, so need to encode it
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,  // both issuer and audience is localhost at this point, so don't validate here yet
+                        ValidateAudience = false
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,10 +77,13 @@ namespace DatingApp.API
 
             // app.UseHttpsRedirection();
 
+            app.UseRouting();
             // order is important here - place sooner/later if doesn't work at first
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            // register jwt auth middleware configured above here
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseRouting();
 
             app.UseAuthorization();
 

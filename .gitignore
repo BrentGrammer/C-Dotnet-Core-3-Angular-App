@@ -2,3 +2,6 @@
 DatingApp.API/bin
 DatingApp.API/obj
 DatingApp.API/*.db
+
+# Secret Key is in here and should not be checked in for a production app.
+DatingApp.API/appsettings.json
