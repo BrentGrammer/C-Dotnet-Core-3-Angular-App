@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
+using DatingApp.API.Helpers;
 
 namespace DatingApp.API
 {
@@ -73,6 +77,30 @@ namespace DatingApp.API
             {
 
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                // if not in development setup a global exception handler - builtin to dotnet
+                // this catchwes exceptions and handles them in requests - returns inernal error to client by default
+                app.UseExceptionHandler(builder =>
+                {
+                    // with the builder you can control status codes returned for errors
+                    // this will run a different request pipeline when an error occurs
+                    builder.Run(async httpContext =>
+                    {
+                        httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                        //write eror message into http response:
+                        var error = httpContext.Features.Get<IExceptionHandlerFeature>();
+                        if (error != null)
+                        {
+                            //this ectension method made in helpers folder adds a header to the respomnse to contain the error
+                            httpContext.Response.AddApplicationError(error.Error.Message);
+                            // NOTE: make sure you import     using Microsoft.AspNetCore.Http;
+                            await httpContext.Response.WriteAsync(error.Error.Message);
+                        }
+                    });
+                });
             }
 
             // app.UseHttpsRedirection();
