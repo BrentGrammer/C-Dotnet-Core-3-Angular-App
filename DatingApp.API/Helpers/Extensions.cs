@@ -9,6 +9,7 @@ namespace DatingApp.API.Helpers
         public static void AddApplicationError(this HttpResponse response, string message)
         {
             // modify the headers to be able to add a error message and add CORS header
+            // The application error header is used on the front end to display an error
             response.Headers.Add("Application-Error", message);
             response.Headers.Add("Access-Control-Expose-Headers", "Application-Error");
             response.Headers.Add("Access-Control-Allow-Origin", "*");

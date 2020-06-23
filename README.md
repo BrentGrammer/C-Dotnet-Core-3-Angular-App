@@ -6,6 +6,13 @@
 - Full CRUD operations
 - Angular 8 Frontend
 
+#### Dotnet Topics Covered:
+
+- Dependency Injection and Configuration
+- Using EF for Database migrations
+- Exception Handling - Global Exception Handler
+- Using Dotnet Secrets
+
 ### Prevent Prettier from formatting html incorrectly:
 
 in settings.json for vscode:
