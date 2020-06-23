@@ -24,6 +24,7 @@ namespace DatingApp.API.Controllers
         // GET api/values
         // use IActionResult type to return HTTP responses in controller
         // make methods async to avoid blocking the thread on db queries - a Task represents an asynchronous op that can return a value
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetValues()
         {
