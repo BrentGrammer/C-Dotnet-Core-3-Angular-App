@@ -1,4 +1,4 @@
-# C# Dotnet Core 3.0 App
+# C# Dotnet Core 3.0 App with Angular Frontend
 
 ### Note: The code is heavily commented for reference purposes.
 
@@ -12,6 +12,28 @@
 - Using EF for Database migrations
 - Exception Handling - Global Exception Handler
 - Using Dotnet Secrets
+- AutoMapper
+- Seeding data to the database for development
+- JWT Authentication
+
+### Running the App
+
+##### Pre-requisites
+
+- Angular CLI with Angular 8+ installed
+- Dotnet SDK 3.0
+
+#### Development:
+
+- `cd DatingApp/DatingApp-SPA`
+- `npm i`
+- `ng serve`
+
+##### Backend:
+
+- `cd DatingApp/DatingApp.API`
+- `dotnet restore`
+- `dotnet watch run`
 
 ### Prevent Prettier from formatting html incorrectly:
 
