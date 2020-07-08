@@ -39,7 +39,8 @@ namespace DatingApp.API
             // add DataContext service and pass in the database engine being used and a connection string
             // connection string comes from appsettings.json
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddControllers();
+            //using Newtonsoft serializer over 3.0 System.Text for more features-install as Nuget Package - Microsoft.AspNetCore.Mvc.NewtonSoftJson
+            services.AddControllers().AddNewtonsoftJson();
             // add CORS as a service to prevent corss origin errors in browser on front end
             services.AddCors();
 

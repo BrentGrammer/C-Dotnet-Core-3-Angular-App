@@ -76,3 +76,6 @@ in settings.json for vscode:
     "editor.defaultFormatter": "vscode.html-language-features"
 }
 ```
+
+### Nuget packages:
+- Microsoft.AspNetCore.Mvc.NewtonSoftJson to replace default Core 3.0 serializer
