@@ -18,10 +18,12 @@
 
 ### Running the App
 
-##### Pre-requisites
+##### Pre-requisites/Dev Tools
 
 - Angular CLI with Angular 8+ installed
-- Dotnet SDK 3.0
+- [Dotnet SDK 3.0 (Release 9-23-2019, v3.0.100)](https://dotnet.microsoft.com/download/dotnet-core/3.0)
+  - Check version installed and bveing used with `dotnet --version`
+- [DB Browser for SQLite](https://sqlitebrowser.org/) - for development
 
 #### Development:
 
