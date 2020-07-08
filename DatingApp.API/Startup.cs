@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using DatingApp.API.Helpers;
+using AutoMapper;
 
 namespace DatingApp.API
 {
@@ -48,6 +49,10 @@ namespace DatingApp.API
             });
             // add CORS as a service to prevent corss origin errors in browser on front end
             services.AddCors();
+
+            //AutoMapper needs to know which assembly the profiles for mapping to use - give it the name of the class
+            // using AutoMapper to import
+            services.AddAutoMapper(typeof(DatingRepository).Assembly);
 
             // adding auth repository to be available and injecfted into app
             // NOTE: AddScoped is used for the vast majority of services - AddTRansient and AddSingleton are only used if specifically needed

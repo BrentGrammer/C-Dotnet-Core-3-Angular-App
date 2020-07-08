@@ -8,11 +8,11 @@
 
 #### Dotnet Topics Covered:
 
-- Dependency Injection and Configuration
+- Adding services to Startup.cs for Dependency Injection and Configuration
 - Using EF for Database migrations
 - Exception Handling - Global Exception Handler
 - Using Dotnet Secrets for development
-- AutoMapper
+- AutoMapper for mapping models and Dtos
 - Seeding data to the database for development
 - JWT Authentication
 
@@ -78,4 +78,6 @@ in settings.json for vscode:
 ```
 
 ### Nuget packages:
+
 - Microsoft.AspNetCore.Mvc.NewtonSoftJson to replace default Core 3.0 serializer
+- AutoMapper.Extensions.Microsoft.DependencyInjection v7.0.0 (use latest)
