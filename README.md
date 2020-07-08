@@ -11,7 +11,7 @@
 - Dependency Injection and Configuration
 - Using EF for Database migrations
 - Exception Handling - Global Exception Handler
-- Using Dotnet Secrets
+- Using Dotnet Secrets for development
 - AutoMapper
 - Seeding data to the database for development
 - JWT Authentication

@@ -52,6 +52,7 @@ namespace DatingApp.API
 
             //specify intrace and concrete implementation
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();
 
             // Configure auth middleware - used for Authorizing calls in routes to tell app how to authenticate
             // after done configuring you need to add and register the middleware in the Configure block.
