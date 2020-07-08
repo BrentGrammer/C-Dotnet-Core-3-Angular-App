@@ -24,18 +24,47 @@
 - [Dotnet SDK 3.0 (Release 9-23-2019, v3.0.100)](https://dotnet.microsoft.com/download/dotnet-core/3.0)
   - Check version installed and bveing used with `dotnet --version`
 - [DB Browser for SQLite](https://sqlitebrowser.org/) - for development
+- Visual Studio Code extensions:
+  - C# for Visual Studio Code (powered by OmniSharp)
+  - C# IDE Extensions for VSCode by jchannon
+  - NuGet Package Manager
+- Dotnet tool for EF CLI: `dotnet tool install --global dotnet-ef --version 3.0.0`
 
-#### Development:
+  - May need to restart VS Code for path to update
 
-- `cd DatingApp/DatingApp-SPA`
-- `npm i`
-- `ng serve`
+#### Setup for development on first run:
 
-##### Backend:
+- Set user secrets with `scripts/./set-secrets.sh`
+- for now, create a appsettings.json in dotnet proj folder for the connection string:
 
-- `cd DatingApp/DatingApp.API`
+```javascript
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=datingapp.db"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  }
+}
+```
+
+- `cd {ProjectFolder}/DatingApp.API`
 - `dotnet restore`
-- `dotnet watch run`
+- Update the database with latest migration on first run: `dotnet ef database update`
+- `cd {ProjectFolder}/DatingApp-SPA`
+- `npm i`
+
+#### Run Frontend:
+
+- `{ProjectFolder}/./frontend.sh`
+
+##### Run Backend:
+
+- `{ProjectFolder}/./backend.sh`
 
 ### Prevent Prettier from formatting html incorrectly:
 
