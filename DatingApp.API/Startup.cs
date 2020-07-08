@@ -40,7 +40,12 @@ namespace DatingApp.API
             // connection string comes from appsettings.json
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             //using Newtonsoft serializer over 3.0 System.Text for more features-install as Nuget Package - Microsoft.AspNetCore.Mvc.NewtonSoftJson
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson(opt =>
+            {
+                //this needs to be done to prevent reference loop error when you have navigation props (Photos in User) - ignore the error.
+                opt.SerializerSettings.ReferenceLoopHandling =
+                Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
             // add CORS as a service to prevent corss origin errors in browser on front end
             services.AddCors();
 
