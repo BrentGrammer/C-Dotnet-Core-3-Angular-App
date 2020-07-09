@@ -16,7 +16,11 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
+import { JwtModule } from '@auth0/angular-jwt';
 
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +39,13 @@ import { MemberCardComponent } from './members/member-card/member-card.component
     BsDropdownModule.forRoot(),
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ['localhost:5000'], // used to prevent error when logging in for first time in session and redirect goes to memberslist before token is set - the jwt package uses an http interceptor to add the token automatically
+        blacklistedRoutes: ['localhost:5000/api/auth'],
+      },
+    }),
   ],
   providers: [ErrorInterceptorProvider],
   bootstrap: [AppComponent],
