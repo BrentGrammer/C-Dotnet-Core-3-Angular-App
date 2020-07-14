@@ -18,7 +18,10 @@ export class MemberDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadUser();
+    // access the user data on the route from creating the resolver to prevent component loading before data has been fetched
+    this.route.data.subscribe((data) => {
+      this.user = data['user'];
+    });
   }
 
   loadUser() {
