@@ -81,3 +81,4 @@ in settings.json for vscode:
 
 - Microsoft.AspNetCore.Mvc.NewtonSoftJson to replace default Core 3.0 serializer
 - AutoMapper.Extensions.Microsoft.DependencyInjection v7.0.0 (use latest)
+- Angular2Jwt (https://github.com/auth0/angular2-jwt) for automatically adding auth token headers to all requests
