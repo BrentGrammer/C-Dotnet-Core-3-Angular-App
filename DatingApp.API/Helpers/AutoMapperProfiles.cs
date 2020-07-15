@@ -26,6 +26,9 @@ namespace DatingApp.API.Helpers
         .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url))
         .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
       CreateMap<Photo, PhotosForDetailedDto>();
+      // this case is mapping the dto which represents what is received from the client to the model we're going to save in the backend
+      //the previous maps were taking the model and mapping it to dtos which we send to the client.
+      CreateMap<UserForUpdateDto, User>();
     }
   }
 }

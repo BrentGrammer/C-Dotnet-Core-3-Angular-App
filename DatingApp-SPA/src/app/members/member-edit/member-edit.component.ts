@@ -3,6 +3,8 @@ import { User } from 'src/_models/user';
 import { ActivatedRoute } from '@angular/router';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { NgForm } from '@angular/forms';
+import { AuthService } from 'src/app/_services/auth.service';
+import { UserService } from 'src/app/_services/user.service';
 
 @Component({
   selector: 'app-member-edit',
@@ -24,7 +26,9 @@ export class MemberEditComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private alertify: AlertifyService
+    private alertify: AlertifyService,
+    private authService: AuthService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -35,9 +39,17 @@ export class MemberEditComponent implements OnInit {
   }
 
   updateUser() {
-    console.log(this.user);
-    this.alertify.success('Changes Saved!');
-    // reset makes form pristine and clears values to remove info and disable save button. pass in the data for the user to repopulate the form values
-    this.editForm.reset(this.user);
+    this.userService
+      .updateUser(this.authService.decodedToken.nameid, this.user)
+      .subscribe(
+        (next) => {
+          this.alertify.success('Changes Saved!');
+          // reset makes form pristine and clears values to remove info and disable save button. pass in the data for the user to repopulate the form values
+          this.editForm.reset(this.user);
+        },
+        (error) => {
+          this.alertify.error(error);
+        }
+      );
   }
 }
