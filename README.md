@@ -83,3 +83,7 @@ in settings.json for vscode:
 - AutoMapper.Extensions.Microsoft.DependencyInjection v7.0.0 (use latest)
 - Angular2Jwt (https://github.com/auth0/angular2-jwt) for automatically adding auth token headers to all requests
 - @kolkov/ngx-gallery for photo gallery
+
+#### Angular Notes:
+
+- Create component in a folder with CLI: `ng g c folderRelativeToAppFolder/component-name`
