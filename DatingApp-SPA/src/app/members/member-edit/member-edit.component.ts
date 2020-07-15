@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { User } from 'src/_models/user';
 import { ActivatedRoute } from '@angular/router';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -13,6 +13,14 @@ export class MemberEditComponent implements OnInit {
   // use ViewChild to access elements or compononets in your html template view for this component
   @ViewChild('editForm') editForm: NgForm;
   user: User;
+  // host listener prevents user from closing window or tab of browser before saving changes and prompts them with a warnging
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    //this causes a browser builtin popup to show if the form has been touched - you have no control over the styling etc. it is just part of the browser but offers a way to warn the user if they close a tab in the browser
+    if (this.editForm.dirty) {
+      $event.returnValue = true;
+    }
+  }
 
   constructor(
     private route: ActivatedRoute,
