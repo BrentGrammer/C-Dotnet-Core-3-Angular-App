@@ -10,11 +10,16 @@
 
 - Adding services to Startup.cs for Dependency Injection and Configuration
 - Using EF for Database migrations
+- Making Changes to the database in development:
+  - `dotnet ef migrations add MyChange`
+  - `dotnet ef database update`
 - Exception Handling - Global Exception Handler
 - Using Dotnet Secrets for development
 - AutoMapper for mapping models and Dtos
 - Seeding data to the database for development
 - JWT Authentication
+- File Upload and Storage using [Cloudinary](https://cloudinary.com)
+  - Docs: https://cloudinary.com/documentation/dotnet_integration
 
 ### Running the App
 
@@ -35,7 +40,7 @@
 #### Setup for development on first run:
 
 - Set user secrets with `scripts/./set-secrets.sh`
-- for now, create a appsettings.json in dotnet proj folder for the connection string:
+- for now, create a appsettings.json in dotnet proj folder for the connection string and Cloudinary creds(login to Cloudinary and get them from the dashboard):
 
 ```javascript
 {
@@ -47,7 +52,13 @@
       "Default": "Debug",
       "System": "Information",
       "Microsoft": "Information"
-    }
+    },
+    "AllowedHosts": "*",
+      "CloudinarySettings": {
+        "CloudName": "",
+        "ApiKey": "",
+        "ApiSecret": ""
+      }
   }
 }
 ```
@@ -81,6 +92,10 @@ in settings.json for vscode:
 
 - Microsoft.AspNetCore.Mvc.NewtonSoftJson to replace default Core 3.0 serializer
 - AutoMapper.Extensions.Microsoft.DependencyInjection v7.0.0 (use latest)
+- CloudinaryDotnet v1.80
+
+### Angular Packages:
+
 - Angular2Jwt (https://github.com/auth0/angular2-jwt) for automatically adding auth token headers to all requests
 - @kolkov/ngx-gallery for photo gallery
 
