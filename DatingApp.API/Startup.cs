@@ -43,9 +43,9 @@ namespace DatingApp.API
       //using Newtonsoft serializer over 3.0 System.Text for more features-install as Nuget Package - Microsoft.AspNetCore.Mvc.NewtonSoftJson
       services.AddControllers().AddNewtonsoftJson(opt =>
       {
-              //this needs to be done to prevent reference loop error when you have navigation props (Photos in User) - ignore the error.
-              opt.SerializerSettings.ReferenceLoopHandling =
-              Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        //this needs to be done to prevent reference loop error when you have navigation props (Photos in User) - ignore the error.
+        opt.SerializerSettings.ReferenceLoopHandling =
+        Newtonsoft.Json.ReferenceLoopHandling.Ignore;
       });
       // add CORS as a service to prevent corss origin errors in browser on front end
       services.AddCors();
@@ -75,12 +75,12 @@ namespace DatingApp.API
           {
             options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
             {
-                    // validate the signing key (from app settings used as the salt) and tell it where th key is
-                    ValidateIssuerSigningKey = true,
-                    // Requires bytes as the argument for the key, so need to encode it
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+              // validate the signing key (from app settings used as the salt) and tell it where th key is
+              ValidateIssuerSigningKey = true,
+              // Requires bytes as the argument for the key, so need to encode it
+              IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
               ValidateIssuer = false,  // both issuer and audience is localhost at this point, so don't validate here yet
-                    ValidateAudience = false
+              ValidateAudience = false
             };
           });
     }
@@ -99,22 +99,22 @@ namespace DatingApp.API
         // this catchwes exceptions and handles them in requests - returns inernal error to client by default
         app.UseExceptionHandler(builder =>
         {
-                  // with the builder you can control status codes returned for errors
-                  // this will run a different request pipeline when an error occurs
-                  builder.Run(async httpContext =>
-                  {
-              httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+          // with the builder you can control status codes returned for errors
+          // this will run a different request pipeline when an error occurs
+          builder.Run(async httpContext =>
+          {
+            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                      //write eror message into http response:
-                      var error = httpContext.Features.Get<IExceptionHandlerFeature>();
-              if (error != null)
-              {
-                        //this ectension method made in helpers folder adds a header to the respomnse to contain the error
-                        httpContext.Response.AddApplicationError(error.Error.Message);
-                        // NOTE: make sure you import     using Microsoft.AspNetCore.Http;
-                        await httpContext.Response.WriteAsync(error.Error.Message);
-              }
-            });
+                    //write eror message into http response:
+                    var error = httpContext.Features.Get<IExceptionHandlerFeature>();
+            if (error != null)
+            {
+                      //this ectension method made in helpers folder adds a header to the respomnse to contain the error
+                      httpContext.Response.AddApplicationError(error.Error.Message);
+                      // NOTE: make sure you import     using Microsoft.AspNetCore.Http;
+                      await httpContext.Response.WriteAsync(error.Error.Message);
+            }
+          });
         });
       }
 
@@ -122,6 +122,7 @@ namespace DatingApp.API
 
       app.UseRouting();
       // order is important here - place sooner/later if doesn't work at first
+      // allowing all these cors props is not a security risk **You definitley don't want to add AllowCredentials() as that would be a securty risk
       app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
       // register jwt auth middleware configured above here
       app.UseAuthentication();
