@@ -115,5 +115,45 @@ namespace DatingApp.API.Controllers
 
       return BadRequest("Could not update Photo.");
     }
+
+    //route to set a photo for a user as main
+    //Normally you would want to make a PUT/Patch request to update a record, but to keep things simple, since this involves a small change, a POST is still used here
+    // The first argument in the method is the user id from the main route at the top of this class, and the second argument is from the 
+    [HttpPost("{id}/setMain")]
+    public async Task<IActionResult> SetMainPhoto(int userId, int id)
+    {
+      // check if the user token id matches with the id in the route:
+      if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+        return Unauthorized();
+
+      // get the user to check to make sure that the photo id in the route belongs to the user:
+      var user = await _repo.GetUser(userId);
+
+      if (!user.Photos.Any(p => p.Id == id))
+      {
+        return Unauthorized();
+      }
+
+      // change the photo isMain to true
+      var photoFromRepo = await _repo.GetPhoto(id);
+
+      // check if it's already set to main
+      if (photoFromRepo.IsMain)
+        return BadRequest("Photo is already set to Main.");
+
+      // get current main photo on user and set to false and set the new photo to IsMain true:
+      var currentMainPhoto = await _repo.GetMainPhotoForUser(userId);
+      currentMainPhoto.IsMain = false;
+
+      photoFromRepo.IsMain = true;
+
+      // save the changes you made to the photos from the repo and return no content if success
+      if (await _repo.SaveAll())
+        return NoContent();
+
+      return BadRequest("could not set photo to main.");
+
+    }
+
   }
 }
