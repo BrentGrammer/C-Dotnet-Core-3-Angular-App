@@ -93,7 +93,11 @@
             </form>
           </tab>
           <tab heading="Photo Edit">
-            <app-photo-editor [photos]="user.photos"></app-photo-editor>
+            <!-- getmemberphotochange is an output prop used to emit the new main photo for the member-edit comp to show on the left -->
+            <app-photo-editor
+              [photos]="user.photos"
+              (getMemberPhotoChange)="updateMainPhoto($event)"
+            ></app-photo-editor>
           </tab>
         </tabset>
       </div>

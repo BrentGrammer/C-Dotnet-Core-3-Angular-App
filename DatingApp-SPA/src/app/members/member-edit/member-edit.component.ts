@@ -14,7 +14,7 @@ import { UserService } from 'src/app/_services/user.service';
 export class MemberEditComponent implements OnInit {
   // use ViewChild to access elements or compononets in your html template view for this component
   @ViewChild('editForm') editForm: NgForm;
-  user: User;
+  user: User; // this is passed to the child photo-edit component so that it can accesss the photos
   // host listener prevents user from closing window or tab of browser before saving changes and prompts them with a warnging
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
@@ -51,5 +51,10 @@ export class MemberEditComponent implements OnInit {
           this.alertify.error(error);
         }
       );
+  }
+
+  updateMainPhoto(photoUrl) {
+    // this is called when the output prop getChangeMemberphoto is emitted from photo-edit with the new url to the new main photo.
+    this.user.photoUrl = photoUrl;
   }
 }

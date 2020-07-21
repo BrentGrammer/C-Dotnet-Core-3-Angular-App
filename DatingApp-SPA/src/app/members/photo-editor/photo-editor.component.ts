@@ -1,9 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 
 import { Photo } from 'src/_models/photo';
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/_services/auth.service';
+import { UserService } from 'src/app/_services/user.service';
+import { AlertifyService } from 'src/app/_services/alertify.service';
 
 /**
  * Child of member-edit comonent used to upload photos
@@ -14,8 +16,12 @@ import { AuthService } from 'src/app/_services/auth.service';
   styleUrls: ['./photo-editor.component.css'],
 })
 export class PhotoEditorComponent implements OnInit {
-  // bring in photos on the user object from parent component - use Input()
+  // bring in photos on the user object from parent component(member-edit) - use Input()
   @Input() photos: Photo[];
+  // use output prop to update the photo shown on the left as the new main photo when a new main photo is selected
+  // this is used to emit the url to the member-edit parent component so it shows the new main photo
+  @Output() getMemberPhotoChange = new EventEmitter<string>(); // emit the photo url string
+  currentMain: Photo; // ref to the current main photo used to update the ui when a new main photo is set
 
   // ng2-file-upload package setup - remember to import FileUploadModule from the package into the imports in app.module.ts
   uploader: FileUploader;
@@ -23,7 +29,11 @@ export class PhotoEditorComponent implements OnInit {
 
   baseUrl = environment.apiUrl;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private alertify: AlertifyService
+  ) {}
 
   ngOnInit(): void {
     this.initializeUploader();
@@ -68,5 +78,23 @@ export class PhotoEditorComponent implements OnInit {
         this.photos.push(photo);
       }
     };
+  }
+
+  setMainPhoto(photo: Photo) {
+    this.userService
+      .setMainPhoto(this.authService.decodedToken.nameid, photo.id)
+      .subscribe(
+        () => {
+          // get the updated current main photo and set the currentMain to false
+          this.currentMain = this.photos.filter((p) => p.isMain === true)[0];
+          this.currentMain.isMain = false;
+          photo.isMain = true;
+          // emit the photo url in the output property to update the photo on the left showing in the parent member-edit component
+          this.getMemberPhotoChange.emit(photo.url);
+        },
+        (error) => {
+          this.alertify.error(error);
+        }
+      );
   }
 }

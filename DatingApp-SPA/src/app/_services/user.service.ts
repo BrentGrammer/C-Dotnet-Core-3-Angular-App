@@ -24,4 +24,12 @@ export class UserService {
   updateUser(id: number, user: User) {
     return this.http.put(`${this.baseUrl}users/${id}`, user);
   }
+
+  setMainPhoto(userId: number, id: number) {
+    // pass in empty object to satisfy post body requirements - it is not used in the backend and the params for the post are pulled from the route params here
+    return this.http.post(
+      `${this.baseUrl}users/${userId}/photos/${id}/setMain`,
+      {}
+    );
+  }
 }
