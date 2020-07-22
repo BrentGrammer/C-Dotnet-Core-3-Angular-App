@@ -14,8 +14,13 @@ export class AppComponent implements OnInit {
   // setting token up here on authservice ensures the decodedtoken info can b read by the app on refreshing the browser
   ngOnInit(): void {
     const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
     if (token) {
       this.authService.decodedToken = this.jwtHelper.decodeToken(token);
+    }
+    // a user is also stored to access data such as main photo url to display in the nav on login.  Check if it is stored and populate the authservice current user prop with what is stored so other components can use ie
+    if (user) {
+      this.authService.currentUser = user;
     }
   }
 }
