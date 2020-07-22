@@ -89,8 +89,14 @@ export class PhotoEditorComponent implements OnInit {
           this.currentMain = this.photos.filter((p) => p.isMain === true)[0];
           this.currentMain.isMain = false;
           photo.isMain = true;
-          // emit the photo url in the output property to update the photo on the left showing in the parent member-edit component
-          this.getMemberPhotoChange.emit(photo.url);
+          // use authservice to update the behaviorsubject and emit the new photo to all subscribed and interested components
+          this.authService.changeMemberPhoto(photo.url);
+          // need to update the authservice user obj main photo and also local storage,so if browser is refreshed, then the token is updated.
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem(
+            'user',
+            JSON.stringify(this.authService.currentUser)
+          );
         },
         (error) => {
           this.alertify.error(error);

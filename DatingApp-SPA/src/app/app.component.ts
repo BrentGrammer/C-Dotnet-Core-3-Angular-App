@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
     // a user is also stored to access data such as main photo url to display in the nav on login.  Check if it is stored and populate the authservice current user prop with what is stored so other components can use ie
     if (user) {
       this.authService.currentUser = user;
+      this.authService.changeMemberPhoto(user.photoUrl); // this sets the behaviorsubject in the auth service which other components are subscribed to with the main photo on app load
     }
   }
 }

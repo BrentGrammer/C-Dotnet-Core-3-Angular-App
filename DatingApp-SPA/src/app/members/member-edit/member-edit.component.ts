@@ -15,6 +15,7 @@ export class MemberEditComponent implements OnInit {
   // use ViewChild to access elements or compononets in your html template view for this component
   @ViewChild('editForm') editForm: NgForm;
   user: User; // this is passed to the child photo-edit component so that it can accesss the photos
+  photoUrl: string;
   // host listener prevents user from closing window or tab of browser before saving changes and prompts them with a warnging
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
@@ -36,6 +37,9 @@ export class MemberEditComponent implements OnInit {
       // user key is defined in the routes.ts module as the resolve data key populated by the resolver
       this.user = data['user'];
     });
+    this.authService.currentPhoto.subscribe(
+      (photoUrl) => (this.photoUrl = photoUrl)
+    );
   }
 
   updateUser() {
