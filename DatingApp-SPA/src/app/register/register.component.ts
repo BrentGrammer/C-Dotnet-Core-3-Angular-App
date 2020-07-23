@@ -7,6 +7,7 @@ import {
   Validators,
   FormBuilder,
 } from '@angular/forms';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-register',
@@ -18,6 +19,8 @@ export class RegisterComponent implements OnInit {
   model: any = {};
   // reactive form set up
   registerForm: FormGroup;
+  bsConfig: Partial<BsDatepickerConfig>; // we only want to set the theme color and in this type other props are set as not optional - so use partial to only require that to be set
+
   constructor(
     private authService: AuthService,
     private alertify: AlertifyService,
@@ -25,6 +28,9 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.bsConfig = {
+      containerClass: 'theme-red', // for color of ngx-bootstrap datepicker
+    };
     this.createRegisterForm();
   }
 
