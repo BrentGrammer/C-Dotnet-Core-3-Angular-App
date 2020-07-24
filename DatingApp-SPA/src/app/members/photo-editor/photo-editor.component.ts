@@ -76,6 +76,17 @@ export class PhotoEditorComponent implements OnInit {
           isMain: res.isMain,
         };
         this.photos.push(photo);
+
+        // need to also update the member's photo and nav photo on frontend after uploading to cloudinary in the case that it's the first photo uploaded from a newly registered member
+        // if there is no other photo for the user, then the isMain is returned as true in the response.  apparently this callback is after the API on our server sets this and not from Cloudinary
+        if (photo.isMain) {
+          this.authService.changeMemberPhoto(photo.url);
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem(
+            'user',
+            JSON.stringify(this.authService.currentUser)
+          );
+        }
       }
     };
   }

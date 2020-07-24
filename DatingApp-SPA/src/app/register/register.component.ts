@@ -8,6 +8,8 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { User } from 'src/_models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -20,11 +22,13 @@ export class RegisterComponent implements OnInit {
   // reactive form set up
   registerForm: FormGroup;
   bsConfig: Partial<BsDatepickerConfig>; // we only want to set the theme color and in this type other props are set as not optional - so use partial to only require that to be set
+  user: User;
 
   constructor(
     private authService: AuthService,
     private alertify: AlertifyService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -68,14 +72,23 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    // this.authService.register(this.model).subscribe(
-    //   () => {
-    //     this.alertify.success('registered');
-    //   },
-    //   (error) => {
-    //     this.alertify.error(error);
-    //   }
-    // );
+    if (this.registerForm.valid) {
+      this.user = Object.assign({}, this.registerForm.value); // not sure why this is done? immutability?
+      this.authService.register(this.registerForm.value).subscribe(
+        () => {
+          this.alertify.success('Registered');
+        },
+        (error) => {
+          this.alertify.error(error);
+        },
+        () => {
+          // this is the complete callback offered as a third arg in the subscribe flow: log user in after register and redirect
+          this.authService.login(this.user).subscribe(() => {
+            this.router.navigate(['/members']);
+          });
+        }
+      );
+    }
   }
 
   cancel() {
