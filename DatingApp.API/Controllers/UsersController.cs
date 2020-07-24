@@ -31,8 +31,8 @@ namespace DatingApp.API.Controllers
       var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
       return Ok(usersToReturn);
     }
-
-    [HttpGet("{id}")]
+    // the NAme prop is added to be able to reference the route as a location of the resource sent in the location header of a CreatedAt response (i.e. in the AuthController for RegisterUser)
+    [HttpGet("{id}", Name = "GetUser")]
     public async Task<IActionResult> GetUser(int id)
     {
       var user = await _repo.GetUser(id);

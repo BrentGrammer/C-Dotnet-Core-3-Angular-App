@@ -41,14 +41,18 @@ namespace DatingApp.API.Controllers
       if (await _repo.UserExists(userForRegisterDto.Username))
         return BadRequest("name already exists.");
 
-      var userToCreate = new User
-      {
-        Username = userForRegisterDto.Username
-      };
+      // Map the source dto from the request to fill values in the User model destination for loading that into the database
+      var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
       var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
-      return StatusCode(201);
+      // this is used as the user object to return to the client since we don't want o return password info etc. on the userToCreate which has all of that.
+      var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+
+      // return a CreatedAt res which has the location header of where to find the resource and the resource itself included in the res.
+      // the location is the route where the resource can be found (the api get route for it), and this is referenced by the Name prop added to the resource get route in the UsersController
+      // the first arg is the route name, the second is route vals which are the controller name where the  route is and the params for the route (the id in this case), third arg is the resource mapped appropriately for sending to the client
+      return CreatedAtRoute("GetUser", new { controller = "Users", id = createdUser.Id }, userToReturn);
     }
 
     // a separate dto user obj for login is created because only username and password will be needed - in the register there will be more info added and fields present

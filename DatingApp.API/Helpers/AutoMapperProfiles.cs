@@ -16,7 +16,7 @@ namespace DatingApp.API.Helpers
     {
 
       // first param is source(Map from) and second is the destination(Map to)
-      // You are putting the values of the source into the matching properties of the destination
+      // You are putting the values of the source into the matching properties of the destination(for instance taking the vals from a request dto and putting them into a model to insert into the database)
 
       //ForMember is used to populate a property a certain way on the Dto using access to the source model object
       // The PhotoUrl on the destination(UserForListDto) is populated from the Source(model) by getting users photos and finding the one with isMain is true:
@@ -33,6 +33,7 @@ namespace DatingApp.API.Helpers
       CreateMap<UserForUpdateDto, User>();
       CreateMap<Photo, PhotoForReturnDto>();
       CreateMap<PhotoForCreationDto, Photo>();
+      CreateMap<UserForRegisterDto, User>();
     }
   }
 }
