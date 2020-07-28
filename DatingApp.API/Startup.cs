@@ -83,6 +83,10 @@ namespace DatingApp.API
               ValidateAudience = false
             };
           });
+
+      // add the action filter to update the last active field when a user hits the user controller routes (LogUserActivity.cs)
+      // use add scoped since you want to create a new instance of the class for every request
+      services.AddScoped<LogUserActivity>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,14 +109,14 @@ namespace DatingApp.API
           {
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                    //write eror message into http response:
-                    var error = httpContext.Features.Get<IExceptionHandlerFeature>();
+            //write eror message into http response:
+            var error = httpContext.Features.Get<IExceptionHandlerFeature>();
             if (error != null)
             {
-                      //this ectension method made in helpers folder adds a header to the respomnse to contain the error
-                      httpContext.Response.AddApplicationError(error.Error.Message);
-                      // NOTE: make sure you import     using Microsoft.AspNetCore.Http;
-                      await httpContext.Response.WriteAsync(error.Error.Message);
+              //this ectension method made in helpers folder adds a header to the respomnse to contain the error
+              httpContext.Response.AddApplicationError(error.Error.Message);
+              // NOTE: make sure you import     using Microsoft.AspNetCore.Http;
+              await httpContext.Response.WriteAsync(error.Error.Message);
             }
           });
         });
