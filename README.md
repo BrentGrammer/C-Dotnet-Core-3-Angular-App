@@ -99,6 +99,7 @@ in settings.json for vscode:
 - Angular2Jwt (https://github.com/auth0/angular2-jwt) for automatically adding auth token headers to all requests
 - @kolkov/ngx-gallery for photo gallery
 - ng2-file-upload v1.4.0 (https://github.com/valor-software/ng2-file-upload) for uploading photos on the front end
+- ngx-timeago library for displaying minutes user was last active: https://github.com/ihym/ngx-timeago
 
 #### Angular Notes:
 
