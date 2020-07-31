@@ -1,5 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace DatingApp.API.Helpers
 {
@@ -16,6 +18,17 @@ namespace DatingApp.API.Helpers
       response.Headers.Add("Access-Control-Allow-Origin", "*");
     }
 
+    //this adds pagination info to the header of the response for the client to use to display and how to request the next batch of items using the Pagination Header class
+    public static void AddPagination(this HttpResponse response, int currentPage, int itemsPerPage, int totalItems, int totalPages)
+    {
+      var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
+      // the headers are added in title case by default, but you can format them to be camel case since that is more idiomatic in JavaScipt with the angular front end:
+      var camelCaseFormatter = new JsonSerializerSettings();
+      camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
+      response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader, camelCaseFormatter));
+      // expose the header to avoid getting CORS errors:
+      response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
+    }
     // this extension method created to be used in the AutoMapperProfiles for populating the age on the destination dto
     public static int CalculateAge(this DateTime theDateTime)
     {

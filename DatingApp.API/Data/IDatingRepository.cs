@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 
 namespace DatingApp.API.Data
@@ -15,7 +16,7 @@ namespace DatingApp.API.Data
     //return a bool to indicate whether the save was successful or not
     Task<bool> SaveAll();
     //Other read methods return the model:
-    Task<IEnumerable<User>> GetUsers();
+    Task<PagedList<User>> GetUsers(UserParams userParams); // return a paged list with pagination info
     Task<User> GetUser(int id);
     Task<Photo> GetPhoto(int id);
     Task<Photo> GetMainPhotoForUser(int userId);

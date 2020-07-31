@@ -28,11 +28,17 @@ namespace DatingApp.API.Controllers
 
     }
 
+    // Note - [FromQuery] is used to tell Dotnet that theuser params are coming from the query string.  If you leave this out then you'll get an empty body error if no query params are set in the url
+    //since dotnet does not know how to handle the request with empty query strings without being told the params are coming from that.
     [HttpGet]
-    public async Task<IActionResult> GetUsers()
+    public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams) //userParams is coming from the query string and mapped by dotnet
     {
-      var users = await _repo.GetUsers();
+      var users = await _repo.GetUsers(userParams); // not converting this to a list enables you to use it as IQueryable and pass into the repo GetUsers method as such.
       var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+      // use the extension method on the Response available in thi controller context to send back pagination info
+      // the pagination info is on the users result since the call to the repo now returns a PagedList and is put on the headers of the response using the extension method AddPagination
+      Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
       return Ok(usersToReturn);
     }
     // the NAme prop is added to be able to reference the route as a location of the resource sent in the location header of a CreatedAt response (i.e. in the AuthController for RegisterUser)

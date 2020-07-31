@@ -20,6 +20,7 @@
 - JWT Authentication
 - File Upload and Storage using [Cloudinary](https://cloudinary.com)
   - Docs: https://cloudinary.com/documentation/dotnet_integration
+- Action Filters for running an action when a group of routes are hit
 
 ### Running the App
 
