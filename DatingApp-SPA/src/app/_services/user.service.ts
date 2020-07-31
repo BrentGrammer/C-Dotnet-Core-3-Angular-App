@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/_models/user';
+import { PaginatedResult } from 'src/_models/pagination';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +15,38 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl + 'users');
+  // getUsers takes optional paramns which are used in the query for pagination - the api defaults to page 1 and ten results if no params are in the query string
+  // this method is called and used in the memberslist-resolver component
+  getUsers(page?, itemsPerPage?): Observable<PaginatedResult<User[]>> {
+    // paginated class holds the list of items in the result prop and the pagination info as well
+    const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<
+      User[]
+    >();
+
+    let params = new HttpParams();
+
+    // check if optional params are passed in and set them on the query string with params.append
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
+    }
+
+    // http Obersvables observe the response body by default but we need access to the pagination headers. So we use the observe override to look at the whole response
+    // you need to do something with the response with headers etc. so use the rxjs pipe operator
+    return this.http
+      .get<User[]>(this.baseUrl + 'users', { observe: 'response', params })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination')) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            ); // theheaders is a string so you need to set it to js object
+          }
+          // map returns on every event emitted by observable
+          return paginatedResult;
+        })
+      );
   }
 
   getUser(id): Observable<User> {

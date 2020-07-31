@@ -10,6 +10,9 @@ import { User } from 'src/_models/user';
 
 @Injectable()
 export class MemberListResolver implements Resolve<User[]> {
+  pageNumber = 1;
+  pageSize = 5;
+
   constructor(
     private userService: UserService,
     private router: Router,
@@ -18,7 +21,7 @@ export class MemberListResolver implements Resolve<User[]> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
     // resolve automatically subscribes to method call here, but you still need to catch the error manually if one occurs
-    return this.userService.getUsers().pipe(
+    return this.userService.getUsers(this.pageNumber, this.pageSize).pipe(
       catchError((error) => {
         this.alertify.error('Problem getting data');
         this.router.navigate(['/home']);
