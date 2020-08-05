@@ -50,7 +50,8 @@ namespace DatingApp.API.Data
 
     public async Task<PagedList<User>> GetUsers(UserParams userParams)
     {
-      var users = _context.Users.Include(p => p.Photos).AsQueryable(); // change this to a queryable so you can add the query on to it (you can't do the below Where statement otherwise)
+      // set default ordering with OrderByDescending
+      var users = _context.Users.Include(p => p.Photos).OrderByDescending(u => u.LastActive).AsQueryable(); // change this to a queryable so you can add the query on to it (you can't do the below Where statement otherwise)
 
       // get all other users n filter out current logged in user
       users = users.Where(u => u.Id != userParams.UserId); //Where returns IQueryable
@@ -65,6 +66,20 @@ namespace DatingApp.API.Data
         var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
 
         users = users.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+      }
+
+      // set ordering if set by user
+      if (!string.IsNullOrEmpty(userParams.OrderBy))
+      {
+        switch (userParams.OrderBy)
+        {
+          case "created":
+            users = users.OrderByDescending(u => u.Created);
+            break;
+          default:
+            users = users.OrderByDescending(u => u.LastActive);
+            break;
+        }
       }
 
       // return an instance of Paged List with pagination info - create a paged list with the static create method on the class
