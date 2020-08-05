@@ -17,7 +17,11 @@ export class UserService {
 
   // getUsers takes optional paramns which are used in the query for pagination - the api defaults to page 1 and ten results if no params are in the query string
   // this method is called and used in the memberslist-resolver component
-  getUsers(page?, itemsPerPage?): Observable<PaginatedResult<User[]>> {
+  getUsers(
+    page?,
+    itemsPerPage?,
+    userParams?
+  ): Observable<PaginatedResult<User[]>> {
     // paginated class holds the list of items in the result prop and the pagination info as well
     const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<
       User[]
@@ -29,6 +33,13 @@ export class UserService {
     if (page != null && itemsPerPage != null) {
       params = params.append('pageNumber', page);
       params = params.append('pageSize', itemsPerPage);
+    }
+
+    //userParams for filtering etc.
+    if (userParams != null) {
+      params = params.append('minAge', userParams.minAge);
+      params = params.append('maxAge', userParams.maxAge);
+      params = params.append('gender', userParams.gender);
     }
 
     // http Obersvables observe the response body by default but we need access to the pagination headers. So we use the observe override to look at the whole response
