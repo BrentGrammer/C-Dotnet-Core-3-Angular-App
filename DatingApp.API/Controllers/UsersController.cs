@@ -33,6 +33,16 @@ namespace DatingApp.API.Controllers
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams) //userParams is coming from the query string and mapped by dotnet
     {
+      // return results based on gender - User is coming from the apicontroller which allows you to access credentials for the session user
+      var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      var userFromRepo = await _repo.GetUser(currentUserId);
+
+      if (string.IsNullOrEmpty(userParams.Gender))
+      {
+        userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+      }
+
       var users = await _repo.GetUsers(userParams); // not converting this to a list enables you to use it as IQueryable and pass into the repo GetUsers method as such.
       var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 

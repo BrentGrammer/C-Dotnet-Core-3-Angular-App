@@ -15,5 +15,12 @@ namespace DatingApp.API.Helpers
       set { _pageSize = (value > _maxPageSize) ? _maxPageSize : value; } // value is builtin available in the set and get method context here
     }
 
+    // these are used to filter results in GetUsers in the UsersController to filter out the currently logged in user and by gender
+    // also these things can be passed into the query string to fetch users for additional filtering.
+    public int UserId { get; set; }
+    public string Gender { get; set; }
+    public int MinAge { get; set; } = 18;
+    public int MaxAge { get; set; } = 99;
+
   }
 }
