@@ -40,6 +40,7 @@ export class UserService {
       params = params.append('minAge', userParams.minAge);
       params = params.append('maxAge', userParams.maxAge);
       params = params.append('gender', userParams.gender);
+      params = params.append('orderBy', userParams.orderBy);
     }
 
     // http Obersvables observe the response body by default but we need access to the pagination headers. So we use the observe override to look at the whole response
