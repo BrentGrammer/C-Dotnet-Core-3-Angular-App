@@ -10,6 +10,7 @@
 
 - Adding services to Startup.cs for Dependency Injection and Configuration
 - Using EF for Database migrations
+- EF Fluent API for configuring Entity Relationships
 - Making Changes to the database in development:
   - `dotnet ef migrations add MyChange`
   - `dotnet ef database update`
