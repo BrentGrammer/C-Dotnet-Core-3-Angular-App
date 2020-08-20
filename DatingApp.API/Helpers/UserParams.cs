@@ -23,5 +23,9 @@ namespace DatingApp.API.Helpers
     public int MaxAge { get; set; } = 99;
     public string OrderBy { get; set; } // always want to specify a default order - this is done in the dating repo with an OrderByDescending call
 
+    // these are used to return a list of liker users or likee users in the dating repo.  They are set by a query param: ex: `api/users?likees=true`
+    public bool Likees { get; set; } = false;  // these bools are used in the dating repo to get a list of users liked and liked by the current logged in user.
+    public bool Likers { get; set; } = false;
+
   }
 }

@@ -65,6 +65,20 @@ namespace DatingApp.API.Data
 
       users = users.Where(u => u.Gender == userParams.Gender);
 
+      // get list of users use has liked and a list of users that have liked the current user
+      // the user has a list of liker and likee user ids so use those to get user information for all of them
+      if (userParams.Likers)
+      {
+        var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
+        users = users.Where(u => userLikers.Contains(u.Id)); // likers of the current user
+      }
+      if (userParams.Likees)
+      {
+        var userLikees = await GetUserLikes(userParams.UserId, userParams.Likers);
+        users = users.Where(u => userLikees.Contains(u.Id)); // likers of the current user
+      }
+
+
       // filter by age - check if defaults have been changed which means user specified an age search
       if (userParams.MinAge != 18 || userParams.MaxAge != 99)
       {
@@ -91,6 +105,24 @@ namespace DatingApp.API.Data
 
       // return an instance of Paged List with pagination info - create a paged list with the static create method on the class
       return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
+    }
+
+    private async Task<IEnumerable<int>> GetUserLikes(int currentUserId, bool likers)
+    {
+      // get include likers and likees user ids for making lists of liker and likee users to send to client
+      var user = await _context.Users
+        .Include(x => x.Likers)
+        .Include(x => x.Likees)
+        .FirstOrDefaultAsync(u => u.Id == currentUserId);
+
+      if (likers)
+      {
+        return user.Likers.Where(u => u.LikeeId == currentUserId).Select(i => i.LikerId); // List of user id ints that like the current user
+      }
+      else
+      {
+        return user.Likees.Where(u => u.LikerId == currentUserId).Select(i => i.LikeeId);
+      }
     }
 
     public async Task<bool> SaveAll()
