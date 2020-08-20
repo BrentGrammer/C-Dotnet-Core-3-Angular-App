@@ -80,4 +80,9 @@ export class UserService {
   deletePhoto(userId: number, id: number) {
     return this.http.delete(`${this.baseUrl}users/${userId}/photos/${id}`);
   }
+
+  sendLike(id: number, recipientId: number) {
+    //because this is a post you need to send something in the body, so just send an empty object
+    return this.http.post(`${this.baseUrl}users/${id}/like/${recipientId}`, {});
+  }
 }
