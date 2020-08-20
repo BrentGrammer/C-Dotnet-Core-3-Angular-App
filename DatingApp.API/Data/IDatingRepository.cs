@@ -21,6 +21,8 @@ namespace DatingApp.API.Data
     Task<Photo> GetPhoto(int id);
     Task<Photo> GetMainPhotoForUser(int userId);
 
+    Task<Like> GetLike(int userId, int recipientId); //used to check if a like already exists for a user - userId is the liker and recipient is the likee
+
 
   }
 }

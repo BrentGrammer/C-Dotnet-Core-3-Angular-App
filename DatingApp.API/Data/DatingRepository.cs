@@ -20,6 +20,7 @@ namespace DatingApp.API.Data
     }
     public void Add<T>(T entity) where T : class
     {
+      // Note that this is not async
       //this method (and all non save methods) only saves the changes to the context in memory. you need to actually save the changes to the database after
       _context.Add(entity);
     }
@@ -27,6 +28,12 @@ namespace DatingApp.API.Data
     public void Delete<T>(T entity) where T : class
     {
       _context.Remove(entity);
+    }
+
+    public async Task<Like> GetLike(int userId, int recipientId)
+    {
+      // check if the user is already liked by the liker to prevent duplicate likes:
+      return await _context.Likes.FirstOrDefaultAsync(x => x.LikerId == userId && x.LikeeId == recipientId);
     }
 
     public async Task<Photo> GetMainPhotoForUser(int userId)

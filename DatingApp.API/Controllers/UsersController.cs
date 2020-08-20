@@ -6,6 +6,7 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -77,6 +78,39 @@ namespace DatingApp.API.Controllers
       if (await _repo.SaveAll()) return NoContent();
 
       throw new Exception($"Updating user {id} failed on saving.");
+    }
+
+    [HttpPost("{id}/like/{recipientId}")]
+    public async Task<IActionResult> LikeUser(int id, int recipientId)
+    {
+      // prevent others from saying another user and like someone else if they are not the user sending the request.
+      if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
+
+      // check if like already exists:
+      var like = await _repo.GetLike(id, recipientId);
+
+      if (like != null)
+        return BadRequest("You already like this user.");
+      // check if user being like exists (??)
+      if (await _repo.GetUser(recipientId) == null)
+        return NotFound();
+
+      // at this point the like is null so you can populate it with the data for the like and get it ready to add to the database
+      like = new Like
+      {
+        LikerId = id,
+        LikeeId = recipientId
+      };
+
+      // NOTE: This is not async - you are not adding it to the database here, just saving it to memory at this stage (using the context)
+      _repo.Add<Like>(like);
+
+      // now you make the asynchronous call to save changes to the database
+      if (await _repo.SaveAll())
+        return Ok();
+
+      return BadRequest("Failed to like user.");
+
     }
   }
 }
