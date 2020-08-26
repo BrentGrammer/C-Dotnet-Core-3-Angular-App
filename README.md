@@ -106,3 +106,9 @@ in settings.json for vscode:
 #### Angular Notes:
 
 - Create component in a folder with CLI: `ng g c folderRelativeToAppFolder/[optionalComponentFolder]/component-name --flat`
+
+### Debugging:
+
+- start the backend (`./backend.sh` in root folder)
+- Start debugger in VsCode and use .NET Core Attach (create configuration if needed)
+- Search for `DatingApp` to attach to that exe or dotnet/dll process and then you can insert breakpoints
