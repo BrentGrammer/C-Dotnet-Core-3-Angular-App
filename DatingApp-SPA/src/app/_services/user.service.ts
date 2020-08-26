@@ -20,7 +20,8 @@ export class UserService {
   getUsers(
     page?,
     itemsPerPage?,
-    userParams?
+    userParams?,
+    likesParam? // likesParam is part of userParams, but pass it in separately here as an optional param
   ): Observable<PaginatedResult<User[]>> {
     // paginated class holds the list of items in the result prop and the pagination info as well
     const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<
@@ -41,6 +42,14 @@ export class UserService {
       params = params.append('maxAge', userParams.maxAge);
       params = params.append('gender', userParams.gender);
       params = params.append('orderBy', userParams.orderBy);
+    }
+
+    if (likesParam === 'Likers') {
+      params = params.append('likers', 'true');
+    }
+
+    if (likesParam === 'Likees') {
+      params = params.append('likees', 'true');
     }
 
     // http Obersvables observe the response body by default but we need access to the pagination headers. So we use the observe override to look at the whole response
