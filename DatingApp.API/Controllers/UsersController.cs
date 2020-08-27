@@ -38,6 +38,8 @@ namespace DatingApp.API.Controllers
       var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
       var userFromRepo = await _repo.GetUser(currentUserId);
+      // if this is missing it causes a null reference error
+      userParams.UserId = currentUserId;
 
       if (string.IsNullOrEmpty(userParams.Gender))
       {
