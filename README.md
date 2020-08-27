@@ -1,5 +1,7 @@
 # C# Dotnet Core 3.0 App with Angular Frontend
 
+- Built following the Udemy course by Neil Cummings [here](https://www.udemy.com/course/build-an-app-with-aspnet-core-and-angular-from-scratch/)
+
 ### Note: The code is heavily commented for reference purposes.
 
 - MVC Architecture
