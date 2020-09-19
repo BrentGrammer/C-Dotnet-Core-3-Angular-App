@@ -29,7 +29,8 @@ namespace DatingApp.API.Models
     public ICollection<Photo> Photos { get; set; }
     public ICollection<Like> Likers { get; set; } // connection with Like entity which is a table that holds likers and likee info for likes, Like table is setup in the DataContext.cs file
     public ICollection<Like> Likees { get; set; }  // because the like entity also has User props this sets up some kind of connection???
+    public ICollection<Message> MessagesSent { get; set; }
+    public ICollection<Message> MessagesReceived { get; set; }
 
   }
-
 }

@@ -20,6 +20,7 @@ namespace DatingApp.API.Data
     // Likes has a relationship with Users (sort of Many to Many):
     public DbSet<Like> Likes { get; set; } // to set up the relationship you need to override the OnModelCreating method on the inherited DbContext
 
+    public DbSet<Message> Messages { get; set; }
     /**
     * Override OnModelCreating from DbContext class to change what Entity Framework does on creating the tables - needed to establish relationship b/w User and Likes
     */
@@ -36,11 +37,23 @@ namespace DatingApp.API.Data
           .WithMany(u => u.Likers)
           .HasForeignKey(u => u.LikeeId) // user table will have a Likee/LikerId 
           .OnDelete(DeleteBehavior.Restrict); // prevent cascading delete of a user if a like is deleted
+
       builder.Entity<Like>()
           .HasOne(u => u.Liker)  // a liker can have many likees
           .WithMany(u => u.Likees)
           .HasForeignKey(u => u.LikerId)
           .OnDelete(DeleteBehavior.Restrict); // prevent cascading delete of a user if a like is deleted
+
+      // messages have similar relationship setup as with Likes above...
+      builder.Entity<Message>()
+        .HasOne(u => u.Sender) // tied to one user that has a collection of messages sent
+        .WithMany(m => m.MessagesSent)
+        .OnDelete(DeleteBehavior.Restrict);  //prevent cascading delete
+
+      builder.Entity<Message>()
+        .HasOne(u => u.Recipient)
+        .WithMany(m => m.MessagesReceived)
+        .OnDelete(DeleteBehavior.Restrict);
     }
   }
 }
