@@ -52,3 +52,5 @@ namespace DatingApp.API.Data
 
 - `dotnet ef migrations add MyMigrationName`
 - `dotnet ef database update`
+
+1. Start web server back up if in development

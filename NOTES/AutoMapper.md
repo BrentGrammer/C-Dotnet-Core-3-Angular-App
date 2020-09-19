@@ -1,3 +1,16 @@
+# AutoMapper
+
+- Create DTOs to represent requests/responses that map to models in the database
+- Used to limit unused data and properties needed by the client and/or hide sensitive data you don't want send back and forth
+
+1. Use automapper to map a dto to a source entity
+1. Configure a mapping in a AutoMapperProfiles.cs file
+
+```c#
+var message = _mapper.Map<Message>(messageForCreationDto);
+```
+
+```c#
 using System.Linq;
 using AutoMapper;
 using DatingApp.API.Dtos;
@@ -6,7 +19,7 @@ using DatingApp.API.Models;
 namespace DatingApp.API.Helpers
 {
 
-  // This is needed for AutoMapper to map from source to destination objects 
+  // This is needed for AutoMapper to map from source to destination objects
   public class AutoMapperProfiles : Profile
   {
     // create a constructor where you can create your mappings:
@@ -35,9 +48,8 @@ namespace DatingApp.API.Helpers
       CreateMap<PhotoForCreationDto, Photo>();
       CreateMap<UserForRegisterDto, User>();
       // this both allows you to map the request dto to the model for storing in the database and also allows the other way so you can also map the model to a dto to return to the client
-      // purpose for doing this is so you don't include passwords or sensitiv/unneeded data in the response after adding to the database
-      // (see Messages Controller)
       CreateMap<MessageForCreationDto, Message>().ReverseMap();
     }
   }
 }
+```
