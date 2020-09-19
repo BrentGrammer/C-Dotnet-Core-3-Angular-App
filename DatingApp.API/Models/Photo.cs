@@ -18,6 +18,4 @@ namespace DatingApp.API.Models
 
     public int UserId { get; set; }
   }
-
-
 }

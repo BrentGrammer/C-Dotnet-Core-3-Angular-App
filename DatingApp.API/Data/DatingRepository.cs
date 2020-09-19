@@ -136,9 +136,32 @@ namespace DatingApp.API.Data
       return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
     }
 
-    public Task<PagedList<Message>> GetMessagesForUser()
+    public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
     {
-      throw new NotImplementedException();
+      // you need to include the Sender information since that is a User linked navigation prop
+      // also need to include the User photo to use
+      var messages = _context.Messages
+        .Include(u => u.Sender).ThenInclude(p => p.Photos) // chains onto User in the first Indlude
+        .Include(u => u.Recipient).ThenInclude(p => p.Photos)
+        .AsQueryable(); // enables use of Where clause
+
+      // filter out messages you don't want to return (with inbox outbox container system)
+      switch (messageParams.MesssageContainer)
+      {
+        case "Inbox":
+          messages = messages.Where(u => u.RecipientId == messageParams.UserId); // messageparams contains logged in user id
+          break;
+        case "Outbox":
+          messages = messages.Where(u => u.SenderId == messageParams.UserId);
+          break;
+        default:
+          messages = messages.Where(u => u.RecipientId == messageParams.UserId && u.IsRead == false);
+          break;
+      }
+
+      // order messages most recent first
+      messages = messages.OrderByDescending(m => m.MessageSent);
+      return await PagedList<Message>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
     }
 
     public Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
