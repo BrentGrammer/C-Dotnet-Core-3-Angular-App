@@ -53,3 +53,8 @@ namespace DatingApp.API.Helpers
   }
 }
 ```
+
+## AutoMapper Magic
+
+- Note that AutoMapper will try to map properties that are associated with navigation props based on naming convention
+- See the `MessageToReturnDto.cs` file which maps and matches props on the User model and populates them automatically based on how they are named in the Dto...

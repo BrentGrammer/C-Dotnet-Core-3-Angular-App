@@ -146,7 +146,7 @@ namespace DatingApp.API.Data
         .AsQueryable(); // enables use of Where clause
 
       // filter out messages you don't want to return (with inbox outbox container system)
-      switch (messageParams.MesssageContainer)
+      switch (messageParams.MessageContainer)
       {
         case "Inbox":
           messages = messages.Where(u => u.RecipientId == messageParams.UserId); // messageparams contains logged in user id

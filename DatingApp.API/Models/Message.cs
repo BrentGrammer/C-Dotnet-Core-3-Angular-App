@@ -15,7 +15,7 @@ namespace DatingApp.API.Models
     public int SenderId { get; set; }
     public User Sender { get; set; } // Link to the user model?
     public int RecipientId { get; set; }
-    public User Recipient { get; set; }
+    public User Recipient { get; set; } // include link to the User Model to be able to use user info such as their main photo url
     public string Content { get; set; }
     public bool IsRead { get; set; }
     public DateTime? DateRead { get; set; } // null if hasn't been read yet

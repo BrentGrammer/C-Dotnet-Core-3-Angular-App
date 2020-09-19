@@ -34,10 +34,13 @@ namespace DatingApp.API.Helpers
       CreateMap<Photo, PhotoForReturnDto>();
       CreateMap<PhotoForCreationDto, Photo>();
       CreateMap<UserForRegisterDto, User>();
-      // this both allows you to map the request dto to the model for storing in the database and also allows the other way so you can also map the model to a dto to return to the client
+      //  ReverseMap() both allows you to map the request dto to the database model for storing in the database and also allows the other way so you can also map the model to a dto to return to the client
       // purpose for doing this is so you don't include passwords or sensitiv/unneeded data in the response after adding to the database
       // (see Messages Controller)
       CreateMap<MessageForCreationDto, Message>().ReverseMap();
+      CreateMap<Message, MessageToReturnDto>()
+        .ForMember(dest => dest.SenderPhotoUrl, opts => opts.MapFrom(src => src.Sender.Photos.FirstOrDefault(p => p.IsMain).Url)) // get the main photourl for each user in the message
+        .ForMember(dest => dest.RecipientPhotoUrl, opts => opts.MapFrom(src => src.Recipient.Photos.FirstOrDefault(p => p.IsMain).Url)); // get the main photourl for each user in the message
     }
   }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -29,6 +30,7 @@ namespace DatingApp.API.Controllers
       _repo = repo;
     }
 
+    // {id} is coming from the query string
     [HttpGet("{id}", Name = "GetMessage")]
     public async Task<IActionResult> GetMessage(int userId, int id)
     {
@@ -42,6 +44,29 @@ namespace DatingApp.API.Controllers
         return NotFound();
 
       return Ok(messageFromRepo);
+    }
+
+    // This get does not conflict with the above because there is no id url query string we take in here - so it qualifies as a non-colliding route
+    // the userId is coming from the route itself defined on line 21 /users/{userId}/messages
+    // use [FromQuery] to tell Dotnet that the pagination params are coming from the query string
+    [HttpGet]
+    public async Task<IActionResult> GetMessagesForUser(int userId,
+      [FromQuery] MessageParams messageParams)
+    {
+      // make sure user token matches user id passed in
+      if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+        return Unauthorized();
+      // populate the user id prop on messageParams using the userId here
+      messageParams.UserId = userId;
+
+      var messagesFromRepo = await _repo.GetMessagesForUser(messageParams);
+
+      var messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+
+      // Return pagination details to response header from the PagedList result returned from repo
+      Response.AddPagination(messagesFromRepo.CurrentPage, messagesFromRepo.PageSize, messagesFromRepo.TotalCount, messagesFromRepo.TotalPages);
+
+      return Ok(messages);
     }
 
     [HttpPost]
@@ -68,6 +93,7 @@ namespace DatingApp.API.Controllers
       var messageToReturn = _mapper.Map<MessageForCreationDto>(message);
 
       if (await _repo.SaveAll())
+        // "GetMessage" is the Name assigned to the method above
         return CreatedAtRoute("GetMessage", new { userId, id = message.Id }, messageToReturn);
 
       throw new Exception("Creating the message failed on save");

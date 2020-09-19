@@ -17,8 +17,9 @@ namespace DatingApp.API.Helpers
     // also these things can be passed into the query string to fetch users for additional filtering.
     public int UserId { get; set; } // sender Id/Currently logged in user
     // allows user to select a container or read or unread messages Inbox/Outbox view
+    // The value of this is set in the url query string /api/users/id/messages?messageContainer=Outbox
     // Unread messages are messages received filtering out the mesages sent based on the sender UserId above
     // can get messages sent also based on the userid
-    public string MesssageContainer { get; set; } = "Unread";
+    public string MessageContainer { get; set; } = "Unread";
   }
 }
