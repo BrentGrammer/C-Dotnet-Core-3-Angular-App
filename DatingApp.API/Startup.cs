@@ -135,9 +135,25 @@ namespace DatingApp.API
 
       app.UseAuthorization();
 
+      /*
+        Setup for serving static files (i.e. from your SPA client)
+        -For this to work, you need to have your SPA build script output the build files to a folder in the root 
+        of the dotnet project - in this case wwwroot folder in DatingApp.API
+      */
+      // look for default asset files like index.html etc., if it finds the file, it serves it
+      app.UseDefaultFiles();
+      // add ability for web server to use static files
+      app.UseStaticFiles();
+
+
+
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
+        // tell .NET to use the Fallback controller (which serves index.html) for any routes it does not recognize
+        // this is done to defer handling of Angular SPA routing to the client on angular routes
+        // the first arg is the name of the method in the controller to use and the second is the name of the controller
+        endpoints.MapFallbackToController("Index", "Fallback");
       });
 
     }

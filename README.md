@@ -114,3 +114,9 @@ in settings.json for vscode:
 - start the backend (`./backend.sh` in root folder)
 - Start debugger in VsCode and use .NET Core Attach (create configuration if needed)
 - Search for `DatingApp` to attach to that exe or dotnet/dll process and then you can insert breakpoints
+
+### Preparing for Production
+
+- Change the ouput directory in `angular.json` to point to `../DatingApp.API/wwwroot`
+- `ng build` in the Angular project folder
+- Setup the .NET project to serve static files (already done in latest commit)
