@@ -30,7 +30,8 @@ namespace DatingApp.API.Controllers
       _repo = repo;
     }
 
-    // {id} is coming from the query string
+    // {id} is coming from the query string and is added on to the end of the root 
+    // ex: api/users/{userId}/messages/{id}"
     [HttpGet("{id}", Name = "GetMessage")]
     public async Task<IActionResult> GetMessage(int userId, int id)
     {
@@ -67,6 +68,21 @@ namespace DatingApp.API.Controllers
       Response.AddPagination(messagesFromRepo.CurrentPage, messagesFromRepo.PageSize, messagesFromRepo.TotalCount, messagesFromRepo.TotalPages);
 
       return Ok(messages);
+    }
+
+    // Get Conversation between users - append 'thread' before the query placeholder since otherwise it would conflict with the {id} in GetMessage
+    [HttpGet("thread/{recipientId}")]
+    public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
+    {
+      // make sure user token matches user id passed in
+      if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+        return Unauthorized();
+
+      var messagesFromRepo = await _repo.GetMessageThread(userId, recipientId);
+      // map the messages returned from Repo to the dto to return
+      var messageThread = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+
+      return Ok(messageThread);
     }
 
     [HttpPost]
