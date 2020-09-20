@@ -27,7 +27,10 @@
           <div class="card-footer">
             <div class="btn-group d-flex">
               <button class="btn btn-primary w-100">Like</button>
-              <button class="btn btn-success w-100">Message</button>
+              <!-- open the messages tab when clicking on Message button on left -->
+              <button class="btn btn-success w-100" (click)="selectTab(3)">
+                Message
+              </button>
             </div>
           </div>
         </div>
@@ -35,7 +38,7 @@
     </div>
     <div class="col-sm-8">
       <div class="tab-panel">
-        <tabset>
+        <tabset class="member-tabset" #memberTabs>
           <tab heading="About {{ user.knownAs }}">
             <h4>Description</h4>
             <p>{{ user.introduction }}</p>
