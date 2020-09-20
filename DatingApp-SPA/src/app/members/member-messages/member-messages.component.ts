@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { tap } from 'rxjs/operators';
 import { Message } from 'src/app/_models/message';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
@@ -26,8 +27,23 @@ export class MemberMessagesComponent implements OnInit {
   }
 
   loadMessages() {
+    const currentUserId = +this.authService.decodedToken.nameid;
+
     this.userService
-      .getMessageThread(this.authService.decodedToken.nameid, this.recipientId)
+      .getMessageThread(currentUserId, this.recipientId)
+      .pipe(
+        // tap allows us to do something before subscribing
+        tap((messages) => {
+          messages.forEach((message) => {
+            if (
+              message.isRead === false &&
+              message.recipientId === currentUserId // only mark read for current recipient looking at it
+            ) {
+              this.userService.markAsRead(currentUserId, message.id);
+            }
+          });
+        })
+      )
       .subscribe(
         (messages) => {
           this.messages = messages;
