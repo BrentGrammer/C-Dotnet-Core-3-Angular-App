@@ -4,7 +4,7 @@ import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { User } from 'src/_models/user';
+import { User } from 'src/app/_models/user';
 /**
  * This resolver was created originally to pass in the like param which filters a list of likers and likees to return with the user.
  * Used as a resolver for the lists component to set users to

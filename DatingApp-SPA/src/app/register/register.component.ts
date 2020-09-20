@@ -8,7 +8,7 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { User } from 'src/_models/user';
+import { User } from 'src/app/_models/user';
 import { Router } from '@angular/router';
 
 @Component({

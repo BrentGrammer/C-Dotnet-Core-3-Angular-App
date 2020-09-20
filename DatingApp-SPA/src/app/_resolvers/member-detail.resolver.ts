@@ -4,7 +4,7 @@ import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { User } from 'src/_models/user';
+import { User } from 'src/app/_models/user';
 
 // purpose of this resolver file is to prevent the loading of member detail component before data has been fetched
 // otherwise you would need ? operators on all the data in the html template to prevent errors

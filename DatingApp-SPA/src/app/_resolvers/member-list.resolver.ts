@@ -4,7 +4,7 @@ import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { User } from 'src/_models/user';
+import { User } from 'src/app/_models/user';
 
 // remember to add this resolver to the routes and app modules
 
