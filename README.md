@@ -117,6 +117,30 @@ in settings.json for vscode:
 
 ### Preparing for Production
 
+NOTE: Alot of this is done already in previous commits, this is recorded for future reference
+
 - Change the ouput directory in `angular.json` to point to `../DatingApp.API/wwwroot`
-- `ng build` in the Angular project folder
-- Setup the .NET project to serve static files (already done in latest commit)
+- `ng build --prod` in the Angular project folder
+- Optimize SPA build for production by using `ng build --prod`
+  - Prod optimization pre-compiles javascript code and removes the Angular JIT compiler which drastically shrinks the files sizes
+  - Enables the production evironment mode
+  - bundles and minifies and uglifies code and removes unused code
+  - NOTE: The build optimizer will agressively optimize the files and for some reason this breaks the animation in the alertify service when showing alerts.
+    - You can turn off this aggressive optimization to fix that in `angular.json` under the configurations for production mode:
+    ```javascript
+     "configurations": {
+            "production": {
+              ...,
+              "buildOptimizer": false, // set this to false!
+    ```
+  - See Docs for more info: [Optimizing ng build for prod](https://angular.io/guide/deployment#production-optimizations)
+- In `environment.prod.ts` file, add the apiUrl:
+
+```javascript
+export const environment = {
+  production: true,
+  apiUrl: "api/", // will use this when in production mode (ng build --prod) which points to the dotnet backend serving the angular project as static files
+};
+```
+
+- Setup the .NET project to serve static files (already done in the setting up for prod commit)

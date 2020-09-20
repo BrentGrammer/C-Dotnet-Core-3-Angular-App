@@ -1,20 +1,24 @@
 # Deploying to Production
 
+Note: see README.md for more Angular specific steps. This is aimed at being a more general guide for working with SPA client projects
+
 ### Setting up the API to Serve Static Files
 
 - Set your SPA build files to be output to a folder in the root of the dotnet api project
 - Set up Dotnet project to serve static files in Startup.cs
-  - ```c#
-      /*
-        Setup for serving static files (i.e. from your SPA client)
-        -For this to work, you need to have your SPA build script output the build files to a folder in the root
-        of the dotnet project - in this case wwwroot folder in DatingApp.API
-      */
-      // look for default asset files like index.html etc., if it finds the file, it serves it
-      app.UseDefaultFiles();
-      // add ability for web server to use static files
-      app.UseStaticFiles();
-    ```
+  - ````c#
+          /*
+            Setup for serving static files (i.e. from your SPA client)
+            -For this to work, you need to have your SPA build script output the build files to a folder in the root
+            of the dotnet project - in this case wwwroot folder in DatingApp.API
+          */
+          // look for default asset files like index.html etc., if it finds the file, it serves it
+          app.UseDefaultFiles();
+          // add ability for web server to use static files
+          app.UseStaticFiles();
+        ```
+    Note that Angular 8+ uses differential loading when you use `ng build`
+    ````
 
 ### Setup .NET project to defer and use SPA routing
 

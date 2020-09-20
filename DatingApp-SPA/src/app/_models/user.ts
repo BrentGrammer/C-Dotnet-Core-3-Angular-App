@@ -7,7 +7,7 @@ export interface User {
   age: number;
   gender: string;
   created: Date;
-  lastActive: Date;
+  lastActive: any; // needed for timeago pipe which turns Date into a string
   photoUrl: string;
   city: string;
   country: string;
