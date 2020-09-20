@@ -107,7 +107,7 @@ in settings.json for vscode:
 
 #### Angular Notes:
 
-- Create component in a folder with CLI: `ng g c folderRelativeToAppFolder/[optionalComponentFolder]/component-name --flat`
+- Create component in a folder with CLI: `ng g c folderRelativeToAppFolder/[optionalComponentNameFolder]/component-name --flat`
 
 ### Debugging:
 
