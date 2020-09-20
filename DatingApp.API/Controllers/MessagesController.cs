@@ -88,12 +88,21 @@ namespace DatingApp.API.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDto messageForCreationDto)
     {
-      if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+      /*
+        The sender is the logged in user
+        We load the User data into memory here because AutoMapper will see this object in memory
+        and automatically map the properties like KnownAs and PhotoUrl to the MessageToReturnDto.
+        Without doing this, these properties on the Dto returned will be null.
+      */
+      var sender = await _repo.GetUser(userId);
+      if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         return Unauthorized();
 
 
       messageForCreationDto.SenderId = userId;
 
+      // NOTE: Because we are loading recipient User in memory here, AutoMapper knows about this and will also attempt to map any properties that match  
+      // to the MessageToReturnDto - we get recipientKnownAs and RecipientPhotoUrl automatically for this reason.
       var recipient = await _repo.GetUser(messageForCreationDto.RecipientId);
 
       if (recipient == null)
@@ -104,13 +113,20 @@ namespace DatingApp.API.Controllers
 
       _repo.Add(message); // not async - not querying or doing anything with the db at this time
 
-      // you need to map the message model back to a dto to return to the client so you don't return password info, etc. in th response
-      // you might want to create a separate response dto for this, but the one we have suffices for this example
-      var messageToReturn = _mapper.Map<MessageForCreationDto>(message);
+
 
       if (await _repo.SaveAll())
+      {
+        /*
+          return the dto after the information is saved to the database in order to populate the Id for the created Resource correctly
+          Otherwise, you will see a random long negative number there.
+         */
+        // you need to map the message model back to a dto to return to the client so you don't return password info, etc. in th response
+        // you might want to create a separate response dto for this, but the one we have suffices for this example
+        var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
         // "GetMessage" is the Name assigned to the method above
         return CreatedAtRoute("GetMessage", new { userId, id = message.Id }, messageToReturn);
+      }
 
       throw new Exception("Creating the message failed on save");
     }
