@@ -67,8 +67,15 @@
           </div>
         </td>
         <td>{{ message.messageSent | timeago }}</td>
+        <!-- Use stopPropagation to prevent the routerlink from hearing the click and redirecting -->
         <td>
-          <button class="btn btn-danger">Delete</button>
+          <button
+            class="btn btn-danger"
+            (click)="$event.stopPropagation()"
+            (click)="deleteMessage(message.id)"
+          >
+            Delete
+          </button>
         </td>
       </tr>
     </table>

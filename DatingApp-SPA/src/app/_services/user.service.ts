@@ -140,4 +140,12 @@ export class UserService {
   sendMessage(id: number, message: Message) {
     return this.http.post(this.baseUrl + 'users/' + id + '/messages', message);
   }
+
+  // this is a post because the message isn't actually deleted unless both users delete it from their inbox
+  deleteMessage(id: number, userId: number) {
+    return this.http.post(
+      this.baseUrl + 'users/' + userId + '/messages/' + id,
+      {}
+    );
+  }
 }
