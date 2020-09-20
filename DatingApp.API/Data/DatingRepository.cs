@@ -146,16 +146,21 @@ namespace DatingApp.API.Data
         .AsQueryable(); // enables use of Where clause later in the switch below instead of having to chain immediately onto this chain to use Where
 
       // filter out messages you don't want to return (with inbox outbox container system)
+      // also filter out messages based on which user has deleted them from their mailbox
       switch (messageParams.MessageContainer)
       {
         case "Inbox":
-          messages = messages.Where(u => u.RecipientId == messageParams.UserId); // messageparams contains logged in user id
+          messages = messages.Where(u => u.RecipientId == messageParams.UserId
+          && u.RecipientDeleted == false); // messageparams contains logged in user id
           break;
         case "Outbox":
-          messages = messages.Where(u => u.SenderId == messageParams.UserId);
+          messages = messages.Where(u => u.SenderId == messageParams.UserId
+          && u.SenderDeleted == false);
           break;
         default:
-          messages = messages.Where(u => u.RecipientId == messageParams.UserId && u.IsRead == false);
+          messages = messages.Where(u => u.RecipientId == messageParams.UserId
+          && u.RecipientDeleted == false
+          && u.IsRead == false);
           break;
       }
 
@@ -170,8 +175,10 @@ namespace DatingApp.API.Data
        .Include(u => u.Sender).ThenInclude(p => p.Photos) // chains onto User in the first Indlude
        .Include(u => u.Recipient).ThenInclude(p => p.Photos)
        .Where(m =>
-        m.RecipientId == userId && m.SenderId == recipientId
-        || m.RecipientId == recipientId && m.SenderId == userId)
+        m.RecipientId == userId && m.RecipientDeleted == false
+          && m.SenderId == recipientId
+        || m.RecipientId == recipientId && m.SenderId == userId
+          && m.SenderDeleted == false) // remove messages that either user deleted from the thread
         .OrderByDescending(m => m.MessageSent)
         .ToListAsync();
 
