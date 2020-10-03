@@ -90,6 +90,11 @@ Note: The server for the database is basically free in Azure, you pay per databa
     - Click `OK`
     - Click `Save` to save changes in the summary view
 
+### Adding Configuration variables/secrets
+
+- Same as Connection string, but add them in the section above it on the same Configuration page
+- **If you have nested variables in app.settings.json like AppSettings:Token, when you host on a linux setup you cannot use colons so use a double underscore; `AppSettings__Token` for the key name**
+
 ## Troubleshooting
 
 - It may be easiest to just insert the `app.UseDeveloperExceptionPage()` in your prod config in `Startup.cs` to detect if something goes wrong on deployment or staging when testing and comment out any custom exception handling there as well (`app.useEcveptionHandler`).
