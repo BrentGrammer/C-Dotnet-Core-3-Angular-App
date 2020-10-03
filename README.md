@@ -149,3 +149,4 @@ export const environment = {
 
 - Repo is at `https://brentonmarquez@dev.azure.com/brentonmarquez/dotnet-practice/_git/dotnet-practice`
 - `git push origin azure`
+  - Main origin is still pointing to Github repo (`git push origin master`)
