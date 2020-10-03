@@ -46,7 +46,7 @@
 - Can add the `Azure App Service` management extension by Microsoft to aid in publishing to Azure from VS Code (Also installs Azure Account extension for login)
   - can click on new Azure tab in left panel to sign in to Azure
   - You want to populate the `Files` directory in your project under the subscription/project in the side panel after signing in
-    - Click the `Deploy to Web app` icon in the panel (upload symbol), click `Browse...` and navigate to and select the `publish` folder in your project where your files were output with the publish command
+    - Click the `Deploy to Web app` icon in the panel (upload symbol), click `Browse...` and navigate to and select the `publish` folder in your project where your files were output with the publish command (will be in a release folder)
     - select the web app to deploy to in the dropdown list and confirm prompt to deploy
     - You can select `Skip for now` in the VS Code prompt unless you want to opt in to it
 
@@ -54,7 +54,41 @@
 
 - You can remove the Connection string in your production app settings file since it will be in Configuration of Application Settings as an environment variable on Azure
   - (You need to set that connection string up on Azure of course)
-- Change database provider in startup.cs to `x.UseSqlServer(...)`
+- Make sure you change database provider in startup.cs to `x.UseSqlServer(...)`
+
+### Creating a Database Resource on Azure
+
+Note: The server for the database is basically free in Azure, you pay per database on that server
+
+- Go to Azure portal and select `Create Resource`
+- Select `SQL Database`
+- Then select the same resource group that holds your project
+- Name a server domain (must be a unique name) for `Server` field:
+  - select the Create New option and fill out the form in the right panel
+    - Fill out the user and password for the database
+- Configure the Database
+  - the default is probably too much for a practice app
+  - The elastic pool option is good if you have numerous databases which consume more or less resources at different times. Elastic pool will manage that and allocate more resources to databases that need them automatically.
+  - Select the Basic tier which is \$5/mo for testing - note this would also work for a small production app technically
+  - Click `Create` (you can pin the completed created resource to your dashboard from the notification in the top right of the screen when it's done)
+  - Add your client IP address to allow connection to SQL server
+    - Select the database resource created in Azure portal (in your dashboard or find it in list of resources)
+    - `Set server firewall..` -> `Add Client IP` (this automatically adds your IP to the whitelist)
+    - Toggle to allow Azure Services and Resources to access this server to `Yes` or `On`
+    - click `Save`
+    - _Note_ These rules are per **server** and not per database, so these rules will apply to all databases on that server
+
+### Adding a connection string to Azure
+
+- Go to your web app resource (not the database) in the portal and to `Configuration` in the left panel
+- In the `Application Settings` you can store your secrets/connection strings
+  - To find the connection string go to your database resource in Azure Portal and find the `Show connection strings` in the summary page of your database
+  - In your web app Application Settings (under Configure still), create a new connection string
+    - set the Name field to `DefaultConnection`
+    - Paste the copied conn string from your database into the Value field
+    - Select AzureSQL as the database type
+    - Click `OK`
+    - Click `Save` to save changes in the summary view
 
 ## Troubleshooting
 
