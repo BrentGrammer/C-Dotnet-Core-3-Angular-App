@@ -2,6 +2,13 @@
 
 ## Azure Devops
 
+- (https://dev.azure.com/)
+
+## Setup
+
+- Go to (https://visualstudio.microsoft.com/) and click the Get Started For Free under Microsoft Azure
+- (email is alternate gmail)
+
 - Repo is at `https://brentonmarquez@dev.azure.com/brentonmarquez/dotnet-practice/_git/dotnet-practice`
   - Repo is private: sign in is alt gmail addr with regular pass, old addr!
 - To transfer an existing repo, go to Repos and use the example shown to use the command line. can use:
@@ -33,13 +40,15 @@
 #### In VS Code:
 
 - `dotnet publish -c Release`
-  - latest code changes will be in a `publish` directory
-  - Before doing this you need to have built a prod build of your angular app and configured the output of the files to be sent to a folder in the root of your dotnet project (see commit in repo for changes to make)
-- Can add the Azure App Service management extension by Microsoft to aid in publishing to Azure from VS Code (Also installs Azure Account extension for login)
+  - latest code changes will be put in a `publish` directory
+  - Before doing this you need to have built a prod build of your angular app and configured the output of the files to be sent to a folder (i.e. `wwwroot`) in the root of your dotnet project (see commit in repo for changes to make)
+  - In SPA project folder, run `ng build --prod` (and make sure you've adjusted the SPA to output build files to a root folder in your dotnet project which is looked at to serve static files)
+- Can add the `Azure App Service` management extension by Microsoft to aid in publishing to Azure from VS Code (Also installs Azure Account extension for login)
   - can click on new Azure tab in left panel to sign in to Azure
   - You want to populate the `Files` directory in your project under the subscription/project in the side panel after signing in
     - Click the `Deploy to Web app` icon in the panel (upload symbol), click `Browse...` and navigate to and select the `publish` folder in your project where your files were output with the publish command
-    - select the web app to deploy to and confirm prompt to deploy
+    - select the web app to deploy to in the dropdown list and confirm prompt to deploy
+    - You can select `Skip for now` in the VS Code prompt unless you want to opt in to it
 
 ## Database Setup
 

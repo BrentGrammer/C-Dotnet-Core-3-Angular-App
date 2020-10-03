@@ -1,6 +1,32 @@
 # Deploying to Production
 
-Note: see README.md for more Angular specific steps. This is aimed at being a more general guide for working with SPA client projects
+### Preparing Angular frontend for Production
+
+NOTE: Alot of this is done already in previous commits, this is recorded for future reference
+
+- Change the `outputPath` directory in `angular.json` to point to `../DatingApp.API/wwwroot` (or the root of your dotnet project and the wwwroot folder in there)
+- `ng build --prod` in the Angular project folder
+- Optimize SPA build for production by using `ng build --prod`
+  - Prod optimization pre-compiles javascript code and removes the Angular JIT compiler which drastically shrinks the files sizes
+  - Enables the production evironment mode
+  - bundles and minifies and uglifies code and removes unused code
+  - NOTE: The build optimizer will agressively optimize the files and for some reason this breaks the animation in the alertify service when showing alerts.
+    - You can turn off this aggressive optimization to fix that in `angular.json` under the configurations for production mode:
+    ```javascript
+     "configurations": {
+            "production": {
+              ...,
+              "buildOptimizer": false, // set this to false!
+    ```
+  - See Docs for more info: [Optimizing ng build for prod](https://angular.io/guide/deployment#production-optimizations)
+- In `environment.prod.ts` file, add the apiUrl:
+
+```javascript
+export const environment = {
+  production: true,
+  apiUrl: "api/", // will use this when in production mode (ng build --prod) which points to the dotnet backend serving the angular project as static files
+};
+```
 
 ### Setting up the API to Serve Static Files
 
@@ -84,17 +110,11 @@ Note: see README.md for more Angular specific steps. This is aimed at being a mo
     },
   ```
 
+  - NOTE: If using Azure, then you set up the database and connection string in Configuration for your App Settings on Azure portal and remove this entry from app.settings.json
+    - Azure configures it as a env var
+
   ### Creating a User for SQLServer
 
 - In [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15) try creating a SQL User account (give it full permissions just to make sure it can create a DB on the server) and use the following type of connection string:
   - `Server=myServerAddress;Database=myDataBase;User Id=myUsername; Password=myPassword;`
   - Also make sure the SQL Server is actually running and you have something listening on 1433 here as well.
-
-# Azure Devops
-
-- (https://dev.azure.com/)
-
-## Setup
-
-- Go to (https://visualstudio.microsoft.com/) and click the Get Started For Free under Microsoft Azure
-- (email is alternate gmail)

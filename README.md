@@ -117,7 +117,7 @@ in settings.json for vscode:
 
 ### Preparing for Production
 
-NOTE: Alot of this is done already in previous commits, this is recorded for future reference
+NOTE: Alot of this is done and in place already in previous commits, this is recorded for future reference
 
 - Change the ouput directory in `angular.json` to point to `../DatingApp.API/wwwroot`
 - `ng build --prod` in the Angular project folder
