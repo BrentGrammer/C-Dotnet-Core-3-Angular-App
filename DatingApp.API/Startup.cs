@@ -32,14 +32,33 @@ namespace DatingApp.API
 
     public IConfiguration Configuration { get; }
 
+    // This is created to run SQLite in development mode
+    public void ConfigureDevelopmentServices(IServiceCollection services)
+    {
+      // add DataContext service and pass in the database engine being used and a connection string
+      // connection string comes from appsettings.json
+      services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+
+      // now that we use SQLite in development mode, call the rest of the services
+      ConfigureServices(services);
+    }
+
+    // This is created to run SQLite in development mode
+    public void ConfigureProductionServices(IServiceCollection services)
+    {
+      // add DataContext service and pass in the database engine being used and a connection string
+      // connection string comes from appsettings.json
+      services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+      // now that we use SQLite in development mode, call the rest of the services
+      ConfigureServices(services);
+    }
+
     // This method gets called by the runtime. Use this method to add services to the container.
     // NOTE: The order does not matter in here - (does in Configure method) - only order to ake it easier to read
     //  first few tutorial videos by Mike Taulty on youtube. He is from Microsoft and excellently explains how it works and why it would be used in an application. 
     public void ConfigureServices(IServiceCollection services)
     {
-      // add DataContext service and pass in the database engine being used and a connection string
-      // connection string comes from appsettings.json
-      services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
       //using Newtonsoft serializer over 3.0 System.Text for more features-install as Nuget Package - Microsoft.AspNetCore.Mvc.NewtonSoftJson
       services.AddControllers().AddNewtonsoftJson(opt =>
       {

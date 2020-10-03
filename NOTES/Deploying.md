@@ -58,3 +58,43 @@ Note: see README.md for more Angular specific steps. This is aimed at being a mo
               endpoints.MapFallbackToController("Index", "Fallback");
             });
     ```
+
+### Setup Database Provider for Production
+
+[See list of Providers that Entity Framework supports Here](https://docs.microsoft.com/en-us/ef/core/providers/?tabs=dotnet-core-cli)
+
+- For SQLServer, install the Nuget package `Microsoft.EntityFrameworkCore.SqlServer`
+  - Select a version that is closest to or matches your version of .NET Core/EF Core
+- Add the connection string for Sqlite database to your `appsettings.Development.json` file:
+
+```json
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=datingapp.db"
+  },
+```
+
+- Add a Connection string for your prod database in your `app.settings.json` file
+
+  - If supporting multiple databases, you'll need to switch the connection string value to conform to the appropriate format
+  - For SQLServer, the string format is similar to:
+
+  ```json
+    "ConnectionStrings": {
+      "DefaultConnection": "Server=localhost; Database=datingapp; User Id=appuser; Password=password"
+    },
+  ```
+
+  ### Creating a User for SQLServer
+
+- In [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15) try creating a SQL User account (give it full permissions just to make sure it can create a DB on the server) and use the following type of connection string:
+  - `Server=myServerAddress;Database=myDataBase;User Id=myUsername; Password=myPassword;`
+  - Also make sure the SQL Server is actually running and you have something listening on 1433 here as well.
+
+# Azure Devops
+
+- (https://dev.azure.com/)
+
+## Setup
+
+- Go to (https://visualstudio.microsoft.com/) and click the Get Started For Free under Microsoft Azure
+- (email is alternate gmail)
