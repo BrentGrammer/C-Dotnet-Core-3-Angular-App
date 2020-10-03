@@ -144,3 +144,8 @@ export const environment = {
 ```
 
 - Setup the .NET project to serve static files (already done in the setting up for prod commit)
+
+## Azure Devops
+
+- Repo is at `https://brentonmarquez@dev.azure.com/brentonmarquez/dotnet-practice/_git/dotnet-practice`
+- `git push origin azure`

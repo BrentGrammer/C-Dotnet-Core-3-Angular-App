@@ -14,7 +14,7 @@ namespace DatingApp.API.Models
     public string PublicId { get; set; }
     //create EF convention based relationship with the User (user has photos) by adding the model and id props
     //this also sets EF to do cascading delete so Photos related to the user are deleted when the user is deleted  
-    public User User { get; set; }
+    public virtual User User { get; set; } // nav prop made virtual due to implementing EF Core lazy loading
 
     public int UserId { get; set; }
   }

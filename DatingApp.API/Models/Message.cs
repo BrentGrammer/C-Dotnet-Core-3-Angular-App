@@ -13,9 +13,9 @@ namespace DatingApp.API.Models
   {
     public int Id { get; set; }
     public int SenderId { get; set; }
-    public User Sender { get; set; } // Link to the user model?
+    public virtual User Sender { get; set; } // Link to the user model? using virtual for lazy loading with EF Core
     public int RecipientId { get; set; }
-    public User Recipient { get; set; } // link to the User Model to be able to use user info such as their main photo url.  The Photos are being included in the Repo response in `GetMessagesForUser()`
+    public virtual User Recipient { get; set; } // link to the User Model to be able to use user info such as their main photo url.  The Photos are being included in the Repo response in `GetMessagesForUser()`
     public string Content { get; set; }
     public bool IsRead { get; set; }
     public DateTime? DateRead { get; set; } // null if hasn't been read yet

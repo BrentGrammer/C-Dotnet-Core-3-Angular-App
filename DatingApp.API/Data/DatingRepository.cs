@@ -49,16 +49,16 @@ namespace DatingApp.API.Data
 
     public async Task<User> GetUser(int id)
     {
-      // You need to include the photos with the user - because photos are a navigation property, they will not be returned with a user automatically
+      // All includes can be removed with the implementation of lazy loading with EF Core
       //firstordefault will get the user based on id and return null if none found
-      var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
+      var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
       return user;
     }
 
     public async Task<PagedList<User>> GetUsers(UserParams userParams)
     {
       // set default ordering with OrderByDescending
-      var users = _context.Users.Include(p => p.Photos).OrderByDescending(u => u.LastActive).AsQueryable(); // change this to a queryable so you can add the query on to it (you can't do the below Where statement otherwise)
+      var users = _context.Users.OrderByDescending(u => u.LastActive).AsQueryable(); // change this to a queryable so you can add the query on to it (you can't do the below Where statement otherwise)
 
       // get all other users n filter out current logged in user
       users = users.Where(u => u.Id != userParams.UserId); //Where returns IQueryable
@@ -109,11 +109,8 @@ namespace DatingApp.API.Data
 
     private async Task<IEnumerable<int>> GetUserLikes(int currentUserId, bool likers)
     {
-      // get include likers and likees user ids for making lists of liker and likee users to send to client
-      var user = await _context.Users
-        .Include(x => x.Likers)
-        .Include(x => x.Likees)
-        .FirstOrDefaultAsync(u => u.Id == currentUserId);
+      // includes likers and likees by way of lazy loading of EF Core with package installed (previously needed to include these)
+      var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == currentUserId);
 
       if (likers)
       {
@@ -138,12 +135,9 @@ namespace DatingApp.API.Data
 
     public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
     {
-      // you need to include the Sender information since that is a User linked navigation prop
-      // also need to include the User photo to use
-      var messages = _context.Messages
-        .Include(u => u.Sender).ThenInclude(p => p.Photos) // chains onto User in the first Indlude
-        .Include(u => u.Recipient).ThenInclude(p => p.Photos)
-        .AsQueryable(); // enables use of Where clause later in the switch below instead of having to chain immediately onto this chain to use Where
+      // With lazy loading implemented in EF Core you don't need to explicitly include the sender info here
+      // You include the Photos automatically with the implementation of lazy loading in EF Core and the include statement is not needed anymore for Photos
+      var messages = _context.Messages.AsQueryable(); // enables use of Where clause later in the switch below instead of having to chain immediately onto this chain to use Where
 
       // filter out messages you don't want to return (with inbox outbox container system)
       // also filter out messages based on which user has deleted them from their mailbox
@@ -172,8 +166,6 @@ namespace DatingApp.API.Data
     public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
     {
       var messages = await _context.Messages
-       .Include(u => u.Sender).ThenInclude(p => p.Photos) // chains onto User in the first Indlude
-       .Include(u => u.Recipient).ThenInclude(p => p.Photos)
        .Where(m =>
         m.RecipientId == userId && m.RecipientDeleted == false
           && m.SenderId == recipientId

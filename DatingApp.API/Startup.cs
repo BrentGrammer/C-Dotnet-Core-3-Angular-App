@@ -37,7 +37,13 @@ namespace DatingApp.API
     {
       // add DataContext service and pass in the database engine being used and a connection string
       // connection string comes from appsettings.json
-      services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+      services.AddDbContext<DataContext>(x =>
+      {
+        // LAZY LOADING to address warnings about unnecessary include usage with navprops from the CountAsync() call in PagedList.cs (because at that time it executes the IQueryable before the included Photos are used or returned)
+        // Now in the dating repository, you can remove all include statements! EF will know what it needs to use and include automatically
+        x.UseLazyLoadingProxies();
+        x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+      });
 
       // now that we use SQLite in development mode, call the rest of the services
       ConfigureServices(services);
@@ -48,7 +54,14 @@ namespace DatingApp.API
     {
       // add DataContext service and pass in the database engine being used and a connection string
       // connection string comes from appsettings.json
-      services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+      services.AddDbContext<DataContext>(x =>
+      {
+        // LAZY LOADING to address warnings about unnecessary include usage with navprops from the CountAsync() call in PagedList.cs (because at that time it executes the IQueryable before the included Photos are used or returned)
+        // Now in the dating repository, you can remove all include statements! EF will know what it needs to use and include automatically
+        x.UseLazyLoadingProxies();
+        x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+
+      });
 
       // now that we use SQLite in development mode, call the rest of the services
       ConfigureServices(services);

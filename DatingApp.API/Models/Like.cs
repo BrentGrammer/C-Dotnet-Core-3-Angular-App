@@ -12,8 +12,8 @@ namespace DatingApp.API.Models
     public int LikerId { get; set; } // id of user that is liking of another user - connection as part of User entity
     public int LikeeId { get; set; } // id of the user that is being liked by another user - connection as part of User entity
     // These props have to do with the relationship to the User table
-    public User Liker { get; set; }
-    public User Likee { get; set; }
+    public virtual User Liker { get; set; } // EF Core lazy loading nav prop - use virtual
+    public virtual User Likee { get; set; }
   }
 }
 
